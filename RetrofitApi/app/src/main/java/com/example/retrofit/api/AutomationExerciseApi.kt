@@ -4,7 +4,10 @@ import com.example.retrofit.data.brands_list.BrandsList
 import com.example.retrofit.data.product_list.ProductsList
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
+import retrofit2.http.POST
 
 var retrofit: Retrofit = Retrofit
     .Builder()
@@ -20,4 +23,8 @@ interface AutomationExerciseApi {
 
     @GET("brandsList")
     suspend fun getBrandsList(): BrandsList
+
+    @POST("searchProduct")
+    @FormUrlEncoded
+    suspend fun searchProduct(@Field("search_product") body: String): ProductsList
 }

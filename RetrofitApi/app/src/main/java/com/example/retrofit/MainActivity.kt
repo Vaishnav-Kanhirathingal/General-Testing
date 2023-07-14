@@ -24,9 +24,17 @@ class MainActivity : AppCompatActivity() {
         val productAdapter = ProductAdapter()
         viewModel.getProductList { productAdapter.submitList(it) }
 
+        val searchAdapter = ProductAdapter()
+
         binding.recyclerView.adapter = brandAdapter
 
         binding.brandSelector.setOnClickListener { binding.recyclerView.adapter = brandAdapter }
         binding.productSelector.setOnClickListener { binding.recyclerView.adapter = productAdapter }
+        binding.searchSelector.setOnClickListener {
+            viewModel.testSearch {
+                searchAdapter.submitList(it)
+            }
+            binding.recyclerView.adapter = searchAdapter
+        }
     }
 }
