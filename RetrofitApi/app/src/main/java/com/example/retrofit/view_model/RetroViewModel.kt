@@ -36,9 +36,9 @@ class RetroViewModel : ViewModel() {
         }
     }
 
-    fun testSearch(setList: (List<Product>) -> Unit) {
+    fun testSearch(query: String, setList: (List<Product>) -> Unit) {
         viewModelScope.launch {
-            val x = retroService.searchProduct("top")
+            val x = retroService.searchProduct(query)
             setList(
                 if (x.responseCode == 200) {
                     x.products

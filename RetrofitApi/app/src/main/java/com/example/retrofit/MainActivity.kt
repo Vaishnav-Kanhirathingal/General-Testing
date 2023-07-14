@@ -30,11 +30,20 @@ class MainActivity : AppCompatActivity() {
 
         binding.brandSelector.setOnClickListener { binding.recyclerView.adapter = brandAdapter }
         binding.productSelector.setOnClickListener { binding.recyclerView.adapter = productAdapter }
-        binding.searchSelector.setOnClickListener {
-            viewModel.testSearch {
-                searchAdapter.submitList(it)
-            }
-            binding.recyclerView.adapter = searchAdapter
+        binding.searchBar.setEndIconOnClickListener {
+            viewModel.testSearch(
+                query = binding.searchBar.editText?.text.let {
+                    if (it.isNullOrBlank()) {
+                        ""
+                    } else {
+                        it.toString()
+                    }
+                },
+                setList = {
+                    searchAdapter.submitList(it)
+                    binding.recyclerView.adapter = searchAdapter
+                }
+            )
         }
     }
 }
