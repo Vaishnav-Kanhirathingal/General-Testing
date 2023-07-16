@@ -7,7 +7,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.payment.databinding.ActivityMainBinding
@@ -30,6 +29,8 @@ import com.example.payment.databinding.ActivityMainBinding
 //}
 
 class MainActivity : AppCompatActivity() {
+    val TAG = this::class.simpleName
+
     private val REQUEST_CODE = 123
     private lateinit var binding: ActivityMainBinding
 
@@ -37,28 +38,33 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        applyBinding()
+    }
 
-        val BHIM_UPI = "in.org.npci.upiapp"
-        val GOOGLE_PAY = "com.google.android.apps.nbu.paisa.user"
-        val PHONE_PE = "com.phonepe.app"
+    private fun applyBinding() {
         val PAYTM = "net.one97.paytm"
+        val GOOGLE_PAY = "com.google.android.apps.nbu.paisa.user"
+//        val PHONE_PE = "com.phonepe.app"
+//        val BHIM_UPI = "in.org.npci.upiapp"
 
-        val upiApps = listOf(PAYTM, GOOGLE_PAY, PHONE_PE, BHIM_UPI)
+        val upiApps = listOf(PAYTM, GOOGLE_PAY /*PHONE_PE, BHIM_UPI*/)
 
         val upiAppButtons = listOf(
-            binding.paytm,
-            binding.gpay,
-            binding.phonepe,
-            binding.bhim,
+            binding.paytmButton,
+            binding.googlePayButton,
+//            binding.phonepe,
+//            binding.bhim,
         )
 
         val uri = getUpiUrl(
-            amount = 1
+            amount = 1,
+            paytmPhoneNumber = "7219648837",
+            transactionNote = "Some Note containing a transaction ID"
         )
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
         intent.data = Uri.parse(uri)
 
-        binding.upi.setOnClickListener {
+        binding.upiButton.setOnClickListener {
             val chooser = Intent.createChooser(intent, "Pay with...")
             startActivityForResult(chooser, REQUEST_CODE)
         }
@@ -66,10 +72,7 @@ class MainActivity : AppCompatActivity() {
         for (i in upiApps.indices) {
             val b = upiAppButtons[i]
             val p = upiApps[i]
-            Log.d(
-                "UpiAppVisibility",
-                p + " | " + isAppInstalled(p).toString() + " | " + isAppUpiReady(p)
-            )
+            Log.d(TAG, p + " | ${isAppInstalled(p)} | ${isAppUpiReady(p)}")
             if (isAppInstalled(p) && isAppUpiReady(p)) {
                 b.visibility = View.VISIBLE
                 b.setOnClickListener {
@@ -84,15 +87,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_CODE) {
-            // Process based on the data in response.
-            Log.d("result", data.toString())
-            data?.getStringExtra("Status")?.let { Log.d("result", it) };
-            data?.getStringExtra("Status")
-                ?.let { Toast.makeText(applicationContext, it, Toast.LENGTH_LONG).show() };
-        }
+    private fun getUpiUrl(
+        amount: Int,
+        paytmPhoneNumber: String,
+        transactionNote: String
+    ): String {
+        return "upi://pay" +
+                "?" + "pa=$paytmPhoneNumber@paytm" +
+                "&" + "pn=Paytm%20Merchant" +
+                "&" + "tn=$transactionNote" +
+                "&" + "am=$amount"
     }
 
     private fun isAppInstalled(packageName: String): Boolean {
@@ -117,14 +121,14 @@ class MainActivity : AppCompatActivity() {
         return appUpiReady
     }
 
-    private fun getUpiUrl(amount:Int):String{
-        return "upi://pay?" + "pa=paytmqr2810050501011ooqggb29a01@paytm" +
-                "&" + "pn=Paytm%20Merchant" +
-                "&" + "mc=5499" +
-                "&" + "mode=02" +
-                "&" + "orgid=000000" +
-                "&" + "paytmqr=2810050501011OOQGGB29A01" +
-                "&" + "am=$amount" +
-                "&" + "sign=MEYCIQDq96qhUnqvyLsdgxtfdZ11SQP//6F7f7VGJ0qr//lF/gIhAPgTMsopbn4Y9DiE7AwkQEPPnb2Obx5Fcr0HJghd4gzo"
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE) {
+            // Process based on the data in response.
+            Log.d(TAG, data.toString())
+            data?.getStringExtra("Status")?.let { Log.d("result", it) };
+            data?.getStringExtra("Status")
+                ?.let { Toast.makeText(applicationContext, it, Toast.LENGTH_LONG).show() };
+        }
     }
 }

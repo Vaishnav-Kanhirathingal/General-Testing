@@ -6,49 +6,123 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/test_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <LinearLayout
+        android:id="@+id/linear_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_marginHorizontal="20dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <Button
-            android:id="@+id/upi"
-            android:layout_width="wrap_content"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/amount_text_field"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="upi" />
+            android:layout_marginVertical="@dimen/text_field_margin"
+            android:hint="Amount">
 
-        <Button
-            android:id="@+id/paytm"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="paytm" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:digits="0123456789+"
+                android:inputType="phone" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <Button
-            android:id="@+id/gpay"
-            android:layout_width="wrap_content"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/phone_number_text_field"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="gpay" />
+            android:layout_marginVertical="@dimen/text_field_margin"
+            android:hint="Phone number">
 
-        <Button
-            android:id="@+id/phonepe"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="phonepe" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:digits="0123456789+"
+                android:inputType="phone" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <Button
-            android:id="@+id/bhim"
-            android:layout_width="wrap_content"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/transaction_note_text_field"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="bhim" />
+            android:layout_marginVertical="@dimen/text_field_margin"
+            android:hint="Transaction Note">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:digits="0,1,2,3,4,5,6,7,8,9,qwertzuiopasdfghjklyxcvbnm"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/google_pay_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/google_pay_24"
+        app:layout_constraintBottom_toBottomOf="@id/upi_button"
+        app:layout_constraintLeft_toLeftOf="@id/linear_layout"
+        app:layout_constraintTop_toTopOf="@id/upi_button" />
+
+    <ImageButton
+        android:id="@+id/paytm_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/paytm_24"
+        app:layout_constraintBottom_toBottomOf="@id/upi_button"
+        app:layout_constraintLeft_toRightOf="@id/google_pay_button"
+        app:layout_constraintTop_toTopOf="@id/upi_button" />
+
+
+    <Button
+        android:id="@+id/upi_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="UPI"
+        app:layout_constraintRight_toRightOf="@id/linear_layout"
+        app:layout_constraintTop_toBottomOf="@id/linear_layout" />
+
+
+    <!--    <LinearLayout-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:orientation="vertical"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent">-->
+
+    <!--        <Button-->
+    <!--            android:id="@+id/upi"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:text="upi" />-->
+
+    <!--        <Button-->
+    <!--            android:id="@+id/paytm"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:text="paytm" />-->
+
+    <!--        <Button-->
+    <!--            android:id="@+id/gpay"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:text="gpay" />-->
+
+    <!--        <Button-->
+    <!--            android:id="@+id/phonepe"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:text="phonepe" />-->
+
+    <!--        <Button-->
+    <!--            android:id="@+id/bhim"-->
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:text="bhim" />-->
+    <!--    </LinearLayout>-->
 </androidx.constraintlayout.widget.ConstraintLayout>
