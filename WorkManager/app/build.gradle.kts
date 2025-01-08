@@ -48,7 +48,9 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-
+    //--------------------------------------------------------------------------------------firebase
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.messaging)
+    //----------------------------------------------------------------------------------work-manager
+    implementation( "androidx.work:work-runtime-ktx:2.10.0")
 }
