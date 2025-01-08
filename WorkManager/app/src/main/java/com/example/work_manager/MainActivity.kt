@@ -7,11 +7,14 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.work.Constraints
+import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
+import androidx.work.workDataOf
 import com.example.work_manager.databinding.ActivityMainBinding
-import com.example.work_manager.worker.SimpleWorker
+import com.example.work_manager.worker.ScheduledWorker
 import com.google.firebase.messaging.FirebaseMessaging
 import java.util.concurrent.TimeUnit
 
@@ -46,17 +49,35 @@ class MainActivity : AppCompatActivity() {
         binding.oneTimeTestButton.setOnClickListener {
             WorkManager.getInstance(context = this).enqueue(
                 request = OneTimeWorkRequest
-                    .Builder(workerClass = SimpleWorker::class)
+//                    .Builder(workerClass = SimpleWorker::class)
+                    .Builder(workerClass = ScheduledWorker::class)
+                    .setInputData(
+                        inputData = workDataOf(
+                            ScheduledWorker.START_TIME_KEY to System.currentTimeMillis()
+                        )
+                    )
+                    .setConstraints(
+                        constraints = Constraints.Builder()
+                            .setRequiresCharging(requiresCharging = true)
+                            .setRequiredNetworkType(networkType = NetworkType.UNMETERED)
+                            .build()
+                    )
                     .build()
             )
         }
         binding.periodicTestButton.setOnClickListener {
             WorkManager.getInstance(context = this).enqueue(
-                request = PeriodicWorkRequest.Builder(
-                    workerClass = SimpleWorker::class,
-                    repeatInterval = 15,
-                    repeatIntervalTimeUnit = TimeUnit.MINUTES
-                )
+                request = PeriodicWorkRequest
+                    .Builder(
+                        workerClass = ScheduledWorker::class,
+                        repeatInterval = 15,
+                        repeatIntervalTimeUnit = TimeUnit.MINUTES
+                    )
+                    .setInputData(
+                        inputData = workDataOf(
+                            ScheduledWorker.START_TIME_KEY to System.currentTimeMillis()
+                        )
+                    )
                     .build()
             )
             Log.d(TAG, "work scheduled")
