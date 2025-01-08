@@ -52,5 +52,5 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.messaging)
     //----------------------------------------------------------------------------------work-manager
-    implementation( "androidx.work:work-runtime-ktx:2.10.0")
+    implementation( libs.androidx.work.runtime.ktx)
 }
