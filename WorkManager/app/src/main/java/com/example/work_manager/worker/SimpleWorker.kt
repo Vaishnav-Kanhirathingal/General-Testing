@@ -15,7 +15,6 @@ class SimpleWorker(
     private val TAG = this::class.simpleName
 
     override suspend fun doWork(): Result {
-//        delay(timeMillis = 5000)
         try {
             var str = ""
             repeat(

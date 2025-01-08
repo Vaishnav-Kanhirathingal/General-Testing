@@ -11,6 +11,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import com.example.work_manager.R
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -23,13 +24,57 @@ class ScheduledWorker(
     appContext = appContext,
     params = params
 ) {
-    private val TAG = this::class.simpleName
 
     companion object {
-        private const val SCHEDULED_WORK_CHANNEL_ID = "SCHEDULED_WORK_CHANNEL_ID"
-//        private const val NOTIFICATION_ID = 1001
-
+        private val TAG = this::class.simpleName
         const val START_TIME_KEY = "START_TIME_KEY"
+
+        private const val SCHEDULED_WORK_CHANNEL_ID = "SCHEDULED_WORK_CHANNEL_ID"
+
+        private fun showNotification(
+            context: Context,
+            startTime: Long?
+        ) {
+            //--------------------------------------------------------------------------create-a-channel
+            (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
+                .createNotificationChannel(
+                    NotificationChannel(
+                        SCHEDULED_WORK_CHANNEL_ID,
+                        "Scheduled work",
+                        NotificationManager.IMPORTANCE_DEFAULT
+                    )
+                        .apply { description = "This is an example notification channel" }
+                )
+            val text = startTime?.let {
+                "START TIME = ${TimeStamps.toTimeStamp(time = it)}\n" +
+                        "CURRENT = ${TimeStamps.toTimeStamp(time = System.currentTimeMillis())}"
+            } ?: "START TIME IS NULL"
+            //-------------------------------------------------------------------building-a-notification
+            val builder = NotificationCompat
+                .Builder(context, SCHEDULED_WORK_CHANNEL_ID) // setting the channel
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setContentTitle("Scheduled Work")
+                .setContentText(text) // setting the one line content text
+                .setStyle(
+                    NotificationCompat.BigTextStyle().bigText(text)
+                ) // setting the multi line text
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setAutoCancel(false)
+            //-----------------------------------------------------------------check-permission-and-show
+            if (
+                ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) ==
+                PackageManager.PERMISSION_GRANTED
+            ) {
+                NotificationManagerCompat
+                    .from(context)
+                    .notify(
+                        Random.nextInt(), // random id assigned. notifications with same id and channel get overridden
+                        builder.build()
+                    )
+            } else {
+                Log.e(TAG, "notification permission denied")
+            }
+        }
     }
 
     override suspend fun doWork(): Result {
@@ -48,54 +93,6 @@ class ScheduledWorker(
         } catch (e: Exception) {
             e.printStackTrace()
             return Result.failure()
-        }
-    }
-
-    private fun showNotification(
-        context: Context,
-        startTime: Long?
-    ) {
-        //--------------------------------------------------------------------------create-a-channel
-        (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
-            .createNotificationChannel(
-                NotificationChannel(
-                    SCHEDULED_WORK_CHANNEL_ID,
-                    "Scheduled work",
-                    NotificationManager.IMPORTANCE_DEFAULT
-                )
-                    .apply { description = "This is an example notification channel" }
-            )
-
-        val builder = NotificationCompat.Builder(context, SCHEDULED_WORK_CHANNEL_ID)
-            .setSmallIcon(android.R.drawable.ic_dialog_info) // Change to your app icon
-            .setContentTitle("Scheduled Work")
-            .setContentText(
-                startTime?.let {
-                    "START TIME = ${TimeStamps.toTimeStamp(time = it)}\n" +
-                            "CURRENT = ${TimeStamps.toTimeStamp(time = System.currentTimeMillis())}"
-                } ?: "START TIME IS NULL"
-            )
-            .setStyle(
-                NotificationCompat.BigTextStyle().bigText(startTime?.let {
-                    "START TIME = ${TimeStamps.toTimeStamp(time = it)}\n" +
-                            "CURRENT = ${TimeStamps.toTimeStamp(time = System.currentTimeMillis())}"
-                } ?: "START TIME IS NULL"
-                )
-            )
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setAutoCancel(false)
-
-        with(NotificationManagerCompat.from(context)) {
-            if (
-                ActivityCompat.checkSelfPermission(
-                    context,
-                    Manifest.permission.POST_NOTIFICATIONS
-                ) == PackageManager.PERMISSION_GRANTED
-            ) {
-                notify(Random.nextInt(), builder.build())
-            } else {
-                Log.e(TAG, "notification permission denied")
-            }
         }
     }
 }
