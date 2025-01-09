@@ -8,6 +8,7 @@ import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.work.Constraints
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
@@ -18,6 +19,7 @@ import com.example.work_manager.databinding.ActivityMainBinding
 import com.example.work_manager.worker.ScheduledWorker
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
@@ -86,14 +88,11 @@ class MainActivity : AppCompatActivity() {
             )
             Log.d(TAG, "work scheduled")
         }
-        binding.testButton.setOnClickListener {
-            viewModel.check()
+        binding.test1Button.setOnClickListener {
+            lifecycleScope.launch { viewModel.checkEverything() }
+        }
+        binding.test2Button.setOnClickListener {
+            lifecycleScope.launch { viewModel.checkSingleton() }
         }
     }
 }
-
-class Car(
-    val sound: String,
-    val price: Int,
-    val taxPercentage: Int,
-)
