@@ -55,7 +55,9 @@ dependencies {
     implementation(libs.firebase.messaging)
     //----------------------------------------------------------------------------------work-manager
     implementation(libs.androidx.work.runtime.ktx)
-    //------------------------------------------------------------------------------------------hilt
-    implementation("com.google.dagger:hilt-android:2.51.1")
-    ksp("com.google.dagger:hilt-compiler:2.51.1")
+    //-----------------------------------------------------------------------------------dagger-hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+    //--------------------------------------------------------------------------------------retrofit
+    implementation ("com.squareup.retrofit2:retrofit:2.11.0")
 }
