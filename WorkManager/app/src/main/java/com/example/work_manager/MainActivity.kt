@@ -94,5 +94,12 @@ class MainActivity : AppCompatActivity() {
         binding.test2Button.setOnClickListener {
             lifecycleScope.launch { viewModel.checkSingleton() }
         }
+        binding.test3Button.setOnClickListener {
+            this.sendBroadcast(
+                Intent(USBBroadcastReceiver.CUSTOM_CALL).apply {
+                    this.putExtra("key", "value")
+                }
+            )
+        }
     }
 }
