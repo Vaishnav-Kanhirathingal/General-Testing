@@ -62,7 +62,10 @@ class ScheduledWorker(
                 .setAutoCancel(false)
             //-----------------------------------------------------------------check-permission-and-show
             if (
-                ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) ==
+                ActivityCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) ==
                 PackageManager.PERMISSION_GRANTED
             ) {
                 NotificationManagerCompat
