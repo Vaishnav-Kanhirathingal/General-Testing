@@ -6,11 +6,14 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkApiModule {
+    const val TEST_CLASS_ONE_NAME = "TEST_CLASS_ONE_NAME"
+    const val TEST_CLASS_TWO_NAME = "TEST_CLASS_TWO_NAME"
 
     @Provides
     @Singleton
@@ -32,9 +35,17 @@ object NetworkApiModule {
 
     @Provides
     @Singleton
-    fun providesTestClassForDI(): TestClassForDI = TestClassForDI()
+    @Named(TEST_CLASS_ONE_NAME)
+    fun providesTestClassForDI1(): TestClassForDI = TestClassForDI()
+
+    @Provides
+    @Singleton
+    @Named(TEST_CLASS_TWO_NAME)
+    fun providesTestClassForDI2(): TestClassForDI = TestClassForDI().apply { this.counter = 10 }
 }
 
 class TestClassForDI {
     var counter = 0
 }
+
+
