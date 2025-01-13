@@ -1,7 +1,9 @@
 package com.example.work_manager
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -17,6 +19,7 @@ import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import androidx.work.workDataOf
 import com.example.work_manager.databinding.ActivityMainBinding
+import com.example.work_manager.listener.USBBroadcastReceiver
 import com.example.work_manager.worker.ScheduledWorker
 import com.google.firebase.messaging.FirebaseMessaging
 import dagger.hilt.android.AndroidEntryPoint
@@ -28,11 +31,18 @@ class MainActivity : AppCompatActivity() {
     private val TAG = this::class.simpleName
     private val viewModel: MainViewModel by viewModels()
     private lateinit var binding: ActivityMainBinding
+    private lateinit var receiver: USBBroadcastReceiver
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        receiver = USBBroadcastReceiver()
+        registerReceiver(
+            receiver,
+            IntentFilter(USBBroadcastReceiver.CUSTOM_CALL),
+            Context.RECEIVER_EXPORTED
+        )
 
         FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
             Log.d(TAG, if (task.isSuccessful) "FCM Token: ${task.result}" else "task failed")
@@ -96,11 +106,14 @@ class MainActivity : AppCompatActivity() {
             lifecycleScope.launch { viewModel.checkSingleton() }
         }
         binding.test3Button.setOnClickListener {
-            this.sendBroadcast(
-                Intent(USBBroadcastReceiver.CUSTOM_CALL).apply {
-                    this.putExtra("key", "value")
-                }
-            )
+            val intent = Intent(USBBroadcastReceiver.CUSTOM_CALL)
+            Log.d(TAG, "b3 pressed, action = ${intent.action}")
+            this.sendBroadcast(intent)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(receiver)
     }
 }

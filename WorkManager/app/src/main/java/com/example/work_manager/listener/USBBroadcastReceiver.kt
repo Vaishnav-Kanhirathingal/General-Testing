@@ -6,9 +6,10 @@ import android.content.Intent
 import android.util.Log
 
 class USBBroadcastReceiver : BroadcastReceiver() {
-    companion object{
+    companion object {
         const val CUSTOM_CALL = "com.example.work_manager.CUSTOM_CALL"
     }
+
     private val TAG = this::class.simpleName
 
     init {
