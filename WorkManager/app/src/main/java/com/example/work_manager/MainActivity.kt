@@ -31,18 +31,19 @@ class MainActivity : AppCompatActivity() {
     private val TAG = this::class.simpleName
     private val viewModel: MainViewModel by viewModels()
     private lateinit var binding: ActivityMainBinding
-    private lateinit var receiver: USBBroadcastReceiver
+    private val receiver = USBBroadcastReceiver()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        receiver = USBBroadcastReceiver()
+
         registerReceiver(
             receiver,
             IntentFilter(USBBroadcastReceiver.CUSTOM_CALL),
-            Context.RECEIVER_EXPORTED
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) Context.RECEIVER_EXPORTED else 0
         )
+
 
         FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
             Log.d(TAG, if (task.isSuccessful) "FCM Token: ${task.result}" else "task failed")
