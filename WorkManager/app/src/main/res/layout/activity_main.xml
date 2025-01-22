@@ -37,4 +37,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="test 3" />
+    <Button
+        android:id="@+id/test_4_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="test 4" />
+    <Button
+        android:id="@+id/test_5_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="test 5" />
 </LinearLayout>

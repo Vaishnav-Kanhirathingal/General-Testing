@@ -100,17 +100,18 @@ class MainActivity : AppCompatActivity() {
             )
             Log.d(TAG, "work scheduled")
         }
-        binding.test1Button.setOnClickListener {
-            lifecycleScope.launch { viewModel.checkEverything() }
-        }
-        binding.test2Button.setOnClickListener {
-            lifecycleScope.launch { viewModel.checkSingleton() }
-        }
+        binding.test1Button.setOnClickListener { lifecycleScope.launch { viewModel.checkEverything() } }
+        binding.test2Button.setOnClickListener { lifecycleScope.launch { viewModel.checkSingleton() } }
         binding.test3Button.setOnClickListener {
             val intent = Intent(USBBroadcastReceiver.CUSTOM_CALL)
             Log.d(TAG, "b3 pressed, action = ${intent.action}")
             this.sendBroadcast(intent)
         }
+        val serviceIntent = Intent(this, TestService::class.java)
+
+        binding.test4Button.setOnClickListener { this.startService(serviceIntent) }
+        binding.test5Button.setOnClickListener { this.stopService(serviceIntent) }
+
     }
 
     override fun onDestroy() {
