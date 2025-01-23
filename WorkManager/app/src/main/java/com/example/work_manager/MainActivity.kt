@@ -22,7 +22,14 @@ import com.example.work_manager.databinding.ActivityMainBinding
 import com.example.work_manager.listener.USBBroadcastReceiver
 import com.example.work_manager.worker.ScheduledWorker
 import com.google.firebase.messaging.FirebaseMessaging
+import com.google.gson.GsonBuilder
+import com.google.gson.JsonObject
 import dagger.hilt.android.AndroidEntryPoint
+import io.ktor.client.call.body
+import io.ktor.client.request.get
+import io.ktor.client.statement.HttpResponse
+import io.ktor.client.statement.bodyAsText
+import io.ktor.util.reflect.TypeInfo
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
@@ -111,7 +118,25 @@ class MainActivity : AppCompatActivity() {
 
         binding.test4Button.setOnClickListener { this.startService(serviceIntent) }
         binding.test5Button.setOnClickListener { this.stopService(serviceIntent) }
-
+        binding.test6Button.setOnClickListener {
+            lifecycleScope.launch {
+                try {
+                    TestApplication.client.get(
+                        urlString = "https://raw.githubusercontent.com/exercemus/exercises/refs/heads/main/exercises.json"
+                    ).let { res: HttpResponse ->
+                        Log.d(TAG, "res.bodyAsText = ${res.bodyAsText()}")
+                        res.body<JsonObject>(typeInfo = TypeInfo(JsonObject::class)).let { json ->
+                            Log.d(
+                                TAG, "json = " +
+                                        GsonBuilder().setPrettyPrinting().create().toJson(json)
+                            )
+                        }
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }
     }
 
     override fun onDestroy() {

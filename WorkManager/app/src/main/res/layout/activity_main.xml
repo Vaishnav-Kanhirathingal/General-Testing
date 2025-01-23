@@ -47,4 +47,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="test 5" />
+    <Button
+        android:id="@+id/test_6_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="test 6" />
 </LinearLayout>
